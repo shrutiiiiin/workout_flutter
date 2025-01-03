@@ -6,13 +6,14 @@ class OnboardingData {
   final String title;
   final String description;
   final Gradient bgGradient;
+  final Color descriptionTextColor;
 
-  OnboardingData({
-    required this.image,
-    required this.title,
-    required this.description,
-    required this.bgGradient,
-  });
+  OnboardingData(
+      {required this.image,
+      required this.title,
+      required this.description,
+      required this.bgGradient,
+      required this.descriptionTextColor});
 }
 
 class OnboardingCard extends StatelessWidget {
@@ -29,7 +30,11 @@ class OnboardingCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(data.image, height: 400),
+          Image.asset(
+            data.image,
+            height: 400,
+            width: 300,
+          ),
           const SizedBox(height: 20),
           Text(
             data.title,
@@ -45,9 +50,9 @@ class OnboardingCard extends StatelessWidget {
             child: Text(
               data.description,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
-                color: Colors.white,
+                color: data.descriptionTextColor,
               ),
             ),
           ),
