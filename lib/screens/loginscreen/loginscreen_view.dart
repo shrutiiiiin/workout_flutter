@@ -5,11 +5,18 @@ class LoginscreenView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Column(
-          // Image.asset(''),
-
+        children: [
+          Container(
+            width: 400,
+            height: 400,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage('assets/login/yoga.png'))),
           ),
+        ],
+      ),
     );
   }
 }

@@ -84,7 +84,7 @@ class _OnboardingViewState extends State<OnboardingView> {
   void _nextPage() {
     if (_currentPage < pages.length - 1) {
       _pageController.nextPage(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     } else {
@@ -130,32 +130,32 @@ class _OnboardingViewState extends State<OnboardingView> {
                       height: 8,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        color: Color(
+                        color: const Color(
                             0XFF4F5F94), // Custom color for the filled part
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 if (_currentPage ==
                     pages.length - 1) // Show 'Finish' only on the last page
                   ElevatedButton(
                     onPressed: _nextPage,
-                    child: Text(
+                    child: const Text(
                       'Let\'s get Started',
                       style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0XFF4F5F94),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                      backgroundColor: const Color(0XFF4F5F94),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 10),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
                   )
                 else
-                  SizedBox.shrink(), // Hide the button on other pages
+                  const SizedBox.shrink(), // Hide the button on other pages
               ],
             ),
           ),
