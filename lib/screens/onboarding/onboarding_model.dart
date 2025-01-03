@@ -29,7 +29,7 @@ class OnboardingCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(data.image, height: 200),
+          Image.asset(data.image, height: 400),
           const SizedBox(height: 20),
           Text(
             data.title,

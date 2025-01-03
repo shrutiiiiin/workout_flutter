@@ -17,7 +17,7 @@ class OnboardingView extends StatelessWidget {
       ),
     ),
     OnboardingData(
-      image: 'assets/onboarding/mentalhealth_Support.png',
+      image: 'assets/onboarding/motivated.png',
       title: "Earn Badges",
       description:
           "Stay motivated with badges for your milestones and achievements.",
@@ -28,7 +28,7 @@ class OnboardingView extends StatelessWidget {
       ),
     ),
     OnboardingData(
-      image: 'assets/onboarding/mentalhealth_Support.png',
+      image: 'assets/onboarding/yoga.png',
       title: "Achievements & Awards",
       description:
           "Celebrate your progress and earn awards for your dedication.",
