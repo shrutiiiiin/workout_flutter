@@ -69,15 +69,17 @@ class _OnboardingViewState extends State<OnboardingView> {
     super.initState();
     _pageController = PageController();
     _pageController.addListener(() {
-      setState(() {
-        _currentPage = _pageController.page!.toInt();
-      });
+      if (mounted) {
+        setState(() {
+          _currentPage = _pageController.page!.toInt();
+        });
+      }
     });
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _pageController.dispose(); // Dispose of the controller
     super.dispose();
   }
 
@@ -90,7 +92,7 @@ class _OnboardingViewState extends State<OnboardingView> {
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const LoginscreenView()),
+        MaterialPageRoute(builder: (context) => LoginscreenView()),
       );
     }
   }
