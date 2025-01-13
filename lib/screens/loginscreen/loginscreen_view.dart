@@ -56,7 +56,7 @@ class LoginscreenView extends StatelessWidget {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Homepageview(),
+                              builder: (context) => const Homepageview(),
                             ),
                           );
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -85,7 +85,7 @@ class LoginscreenView extends StatelessWidget {
                           ),
                           borderRadius: BorderRadius.circular(30),
                           boxShadow: [
-                            BoxShadow(
+                            const BoxShadow(
                               color: Colors.black26,
                               blurRadius: 6,
                               offset: Offset(0, 2),
@@ -113,8 +113,8 @@ class LoginscreenView extends StatelessWidget {
                     const SizedBox(height: 20),
 
                     // Divider
-                    Row(
-                      children: const [
+                    const Row(
+                      children: [
                         Expanded(
                             child:
                                 Divider(thickness: 1, color: Colors.black26)),
