@@ -187,7 +187,6 @@ class LoginscreenView extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
 
-                    // Forgot Password and Sign-Up
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
