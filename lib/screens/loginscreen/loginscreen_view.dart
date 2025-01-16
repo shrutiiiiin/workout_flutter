@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:workout_flutter_app/screens/homepage/homepageView.dart';
+import 'package:workout_flutter_app/services/email-signin.dart';
 import 'package:workout_flutter_app/services/google-signin.dart';
 
-class LoginscreenView extends StatelessWidget {
-  final GoogleSignInServices googleSignInServices = GoogleSignInServices();
-
+class LoginscreenView extends StatefulWidget {
   LoginscreenView({super.key});
+
+  @override
+  State<LoginscreenView> createState() => _LoginscreenViewState();
+}
+
+class _LoginscreenViewState extends State<LoginscreenView> {
+  final GoogleSignInServices googleSignInServices = GoogleSignInServices();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final EmailSignInServices emailSignInServices = EmailSignInServices();
 
   @override
   Widget build(BuildContext context) {
