@@ -13,18 +13,6 @@ class OnboardingView extends StatefulWidget {
 class _OnboardingViewState extends State<OnboardingView> {
   final List<OnboardingData> pages = [
     OnboardingData(
-      image: 'assets/onboarding/mentalhealth.png',
-      title: "Mental Health Support",
-      description:
-          "Track your well-being and access resources for mental health support.",
-      bgGradient: const LinearGradient(
-        colors: [Color(0XFFAADCDC), Color(0XFFD9E3E4)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-      descriptionTextColor: Colors.black45,
-    ),
-    OnboardingData(
       image: 'assets/onboarding/motivated.png',
       title: "Earn Badges",
       description:
@@ -33,6 +21,18 @@ class _OnboardingViewState extends State<OnboardingView> {
         colors: [Color(0XFFFFC3D2), Color(0XFFFFEFF3)],
         begin: Alignment.bottomLeft,
         end: Alignment.topLeft,
+      ),
+      descriptionTextColor: Colors.black45,
+    ),
+    OnboardingData(
+      image: 'assets/onboarding/mentalhealth.png',
+      title: "Mental Health Support",
+      description:
+          "Track your well-being and access resources for mental health support.",
+      bgGradient: const LinearGradient(
+        colors: [Color(0XFFAADCDC), Color(0XFFD9E3E4)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
       ),
       descriptionTextColor: Colors.black45,
     ),
@@ -97,6 +97,13 @@ class _OnboardingViewState extends State<OnboardingView> {
     }
   }
 
+  void _skipOnboarding() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginscreenView()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,56 +118,75 @@ class _OnboardingViewState extends State<OnboardingView> {
             colors: pages.map((data) => data.bgGradient.colors.first).toList(),
             itemCount: pages.length,
           ),
+
           Positioned(
-            bottom:
-                40, // Move progress bar up from the bottom (adjust value as needed)
-            left: 0,
-            right: 0,
-            child: Column(
+            top: 50, // Positioning it like an app bar
+            left: 20,
+            right: 20,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  height: 8, // Slightly thicker for better visibility
-                  width: MediaQuery.of(context).size.width * 0.6, // 60% width
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.white,
-                  ),
-                  child: FractionallySizedBox(
-                    alignment: Alignment.centerLeft,
-                    widthFactor: (_currentPage + 1) / pages.length,
-                    child: Container(
-                      height: 8,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: const Color(
-                            0XFF4F5F94), // Custom color for the filled part
+                // Progress Bar
+                Expanded(
+                  child: Container(
+                    height: 6,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Colors.white,
+                    ),
+                    child: FractionallySizedBox(
+                      alignment: Alignment.centerLeft,
+                      widthFactor: (_currentPage + 1) / pages.length,
+                      child: Container(
+                        height: 8,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: const Color(
+                              0XFF4F5F94), // Custom color for the filled part
+                        ),
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                if (_currentPage ==
-                    pages.length - 1) // Show 'Finish' only on the last page
-                  ElevatedButton(
-                    onPressed: _nextPage,
-                    child: const Text(
-                      'Let\'s get Started',
-                      style: TextStyle(fontSize: 16, color: Colors.white),
+
+                // Skip Button
+                TextButton(
+                  onPressed: _skipOnboarding,
+                  child: const Text(
+                    "Skip",
+                    style: TextStyle(
+                      color: Colors.black38,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0XFF4F5F94),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                  )
-                else
-                  const SizedBox.shrink(), // Hide the button on other pages
+                  ),
+                ),
               ],
             ),
           ),
+
+          // "Let's Get Started" Button on Last Page
+          if (_currentPage == pages.length - 1)
+            Positioned(
+              bottom: 40,
+              left: 20,
+              right: 20,
+              child: ElevatedButton(
+                onPressed: _nextPage,
+                child: const Text(
+                  'Let\'s get Started',
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0XFF4F5F94),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

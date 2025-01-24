@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:workout_flutter_app/screens/loginscreen/loginscreen_view.dart';
 import 'package:workout_flutter_app/screens/onboarding/onboarding_view.dart';
-import 'package:firebase_core/firebase_core.dart'; // Import Firebase Core
+import 'package:firebase_core/firebase_core.dart';
+import 'package:workout_flutter_app/screens/welcomescreen/welcome_view.dart'; // Import Firebase Core
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: LoginscreenView(),
+      home: OnboardingView(),
     );
   }
 }

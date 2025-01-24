@@ -25,7 +25,7 @@ class OnboardingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: data.bgGradient, // Apply the gradient here
+        gradient: data.bgGradient,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
