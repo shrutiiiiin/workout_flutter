@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workout_flutter_app/screens/homepage/homepageView.dart';
+import 'package:workout_flutter_app/screens/loginscreen/email_signup_view.dart';
+import 'package:workout_flutter_app/screens/welcomescreen/welcome_view.dart';
 import 'package:workout_flutter_app/services/email-signin.dart';
 import 'package:workout_flutter_app/services/google-signin.dart';
 
@@ -94,8 +96,8 @@ class _LoginscreenViewState extends State<LoginscreenView> {
                             end: Alignment.centerRight,
                           ),
                           borderRadius: BorderRadius.circular(30),
-                          boxShadow: [
-                            const BoxShadow(
+                          boxShadow: const [
+                            BoxShadow(
                               color: Colors.black26,
                               blurRadius: 6,
                               offset: Offset(0, 2),
@@ -156,7 +158,6 @@ class _LoginscreenViewState extends State<LoginscreenView> {
                           ),
                           const SizedBox(height: 10),
 
-                          // Email Field
                           TextFormField(
                             controller: _emailController,
                             decoration: InputDecoration(
@@ -204,12 +205,40 @@ class _LoginscreenViewState extends State<LoginscreenView> {
 
                           // Login Button
                           ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                emailSignInServices.signInwithEmail(
-                                  email: _emailController.text.trim(),
-                                  password: _passwordController.text.trim(),
-                                );
+                                try {
+                                  final user =
+                                      await emailSignInServices.signInwithEmail(
+                                    email: _emailController.text.trim(),
+                                    password: _passwordController.text.trim(),
+                                  );
+                                  if (user != null) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const Homepageview()),
+                                    );
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content:
+                                            Text('Successfully Logged in!'),
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
+                                  }
+                                } catch (e) {
+                                  // Show the error message in a SnackBar
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(e
+                                          .toString()
+                                          .replaceFirst('Exception: ', '')),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -252,7 +281,10 @@ class _LoginscreenViewState extends State<LoginscreenView> {
                         ),
                         TextButton(
                           onPressed: () {
-                            // Navigate to sign-up page
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EmailSignupView()));
                           },
                           child: const Text(
                             'Sign Up',
