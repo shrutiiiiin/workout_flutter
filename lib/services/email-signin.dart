@@ -24,7 +24,8 @@ class EmailSignInServices {
     }
   }
 
-  Future<User?> signUpwithEmail(String email, String password) async {
+  Future<User?> signUpwithEmail(
+      {required String email, required String password}) async {
     try {
       final UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
