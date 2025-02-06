@@ -1,3 +1,5 @@
+import 'dart:nativewrappers/_internal/vm/lib/internal_patch.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -47,15 +49,66 @@ class _EmailSignupViewState extends State<EmailSignupView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextFormField(
-                        controller: _nameController,
-                      )
+                      _buildTextField(
+                        Controller: _nameController,
+                        iconData: Icons.person,
+                        isPassword: false,
+                        hintText: 'Enter your name',
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      _buildTextField(
+                        Controller: _nameController,
+                        iconData: Icons.person,
+                        isPassword: false,
+                        hintText: 'Enter your name',
+                      ),
                     ],
                   ))
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _buildTextField extends StatelessWidget {
+  final TextEditingController Controller;
+  final IconData iconData;
+  bool isPassword;
+  String hintText;
+
+  _buildTextField(
+      {super.key,
+      required this.Controller,
+      required this.iconData,
+      required this.isPassword,
+      required this.hintText});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      obscureText: isPassword,
+      style: const TextStyle(color: Colors.white),
+      controller: Controller,
+      decoration: InputDecoration(
+          hintText: hintText,
+          prefixIcon: Icon(
+            iconData,
+            color: Colors.white,
+          ),
+          filled: true,
+          fillColor: Color(0xFF333333),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25),
+          )),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return ' Please $hintText';
+        }
+      },
     );
   }
 }
