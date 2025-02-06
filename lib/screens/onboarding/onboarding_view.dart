@@ -18,11 +18,11 @@ class _OnboardingViewState extends State<OnboardingView> {
       description:
           "Stay motivated with badges for your milestones and achievements.",
       bgGradient: const LinearGradient(
-        colors: [Color(0XFFFFC3D2), Color(0XFFFFEFF3)],
+        colors: [Color(0xFF1E1E2C), Color(0xFF3E3E58)],
         begin: Alignment.bottomLeft,
         end: Alignment.topLeft,
       ),
-      descriptionTextColor: Colors.black45,
+      descriptionTextColor: Colors.white70,
     ),
     OnboardingData(
       image: 'assets/onboarding/mentalhealth.png',
@@ -30,11 +30,11 @@ class _OnboardingViewState extends State<OnboardingView> {
       description:
           "Track your well-being and access resources for mental health support.",
       bgGradient: const LinearGradient(
-        colors: [Color(0XFFAADCDC), Color(0XFFD9E3E4)],
+        colors: [Color(0xFF232D3F), Color(0xFF3A506B)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
-      descriptionTextColor: Colors.black45,
+      descriptionTextColor: Colors.white70,
     ),
     OnboardingData(
       image: 'assets/onboarding/yoga.png',
@@ -42,22 +42,22 @@ class _OnboardingViewState extends State<OnboardingView> {
       description:
           "Celebrate your progress and earn awards for your dedication.",
       bgGradient: const LinearGradient(
-        colors: [Color(0XFFFFD700), Color(0XFFFFF5E3)],
+        colors: [Color(0xFF3E3E58), Color(0xFF5E5E77)],
         begin: Alignment.bottomLeft,
         end: Alignment.topRight,
       ),
-      descriptionTextColor: Colors.black45,
+      descriptionTextColor: Colors.white70,
     ),
     OnboardingData(
       image: 'assets/onboarding/comforting.png',
       title: "Menstrual Cycle Tracking",
       description: "Keep track of your cycle and access personalized insights.",
       bgGradient: const LinearGradient(
-        colors: [Color(0XFFE0BFFF), Color(0XFFFAF4FF)],
+        colors: [Color(0xFF4B3F72), Color(0xFF6A5D8A)],
         begin: Alignment.bottomLeft,
         end: Alignment.topLeft,
       ),
-      descriptionTextColor: Colors.black45,
+      descriptionTextColor: Colors.white70,
     ),
   ];
 
@@ -79,7 +79,7 @@ class _OnboardingViewState extends State<OnboardingView> {
 
   @override
   void dispose() {
-    _pageController.dispose(); // Dispose of the controller
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -107,6 +107,7 @@ class _OnboardingViewState extends State<OnboardingView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
           ConcentricPageView(
@@ -118,21 +119,19 @@ class _OnboardingViewState extends State<OnboardingView> {
             colors: pages.map((data) => data.bgGradient.colors.first).toList(),
             itemCount: pages.length,
           ),
-
           Positioned(
-            top: 50, // Positioning it like an app bar
+            top: 50,
             left: 20,
             right: 20,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Progress Bar
                 Expanded(
                   child: Container(
                     height: 6,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
-                      color: Colors.white,
+                      color: Colors.white30,
                     ),
                     child: FractionallySizedBox(
                       alignment: Alignment.centerLeft,
@@ -141,21 +140,18 @@ class _OnboardingViewState extends State<OnboardingView> {
                         height: 8,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: const Color(
-                              0XFF4F5F94), // Custom color for the filled part
+                          color: Colors.tealAccent,
                         ),
                       ),
                     ),
                   ),
                 ),
-
-                // Skip Button
                 TextButton(
                   onPressed: _skipOnboarding,
                   child: const Text(
                     "Skip",
                     style: TextStyle(
-                      color: Colors.black38,
+                      color: Colors.white70,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
@@ -164,8 +160,6 @@ class _OnboardingViewState extends State<OnboardingView> {
               ],
             ),
           ),
-
-          // "Let's Get Started" Button on Last Page
           if (_currentPage == pages.length - 1)
             Positioned(
               bottom: 40,
@@ -175,12 +169,12 @@ class _OnboardingViewState extends State<OnboardingView> {
                 onPressed: _nextPage,
                 child: const Text(
                   'Let\'s get Started',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0XFF4F5F94),
+                  backgroundColor: Colors.tealAccent,
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
