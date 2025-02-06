@@ -1,8 +1,23 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-class Homepageview extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:pedometer/pedometer.dart';
+
+class Homepageview extends StatefulWidget {
   const Homepageview({super.key});
 
+  @override
+  State<Homepageview> createState() => _HomepageviewState();
+}
+
+class _HomepageviewState extends State<Homepageview> {
+  late Stream<StepCount> _stepCountStream;
+  late Stream<PedestrianStatus> _pedestrianStatusStream;
+  String _status = 'Unknown', _steps = '0';
+  double _calories = 0; // Rough estimate: 0.04 calories per step
+  int _minutesActive = 0;
+  DateTime? _lastStepTime;
+  Timer? _activityTimer;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,9 +45,7 @@ class Homepageview extends StatelessWidget {
               backgroundColor: Colors.blue,
               child: Icon(Icons.person, color: Colors.white, size: 20),
             ),
-            onPressed: () {
-              // TODO: Navigate to profile
-            },
+            onPressed: () {},
           ),
           const SizedBox(width: 8),
         ],
