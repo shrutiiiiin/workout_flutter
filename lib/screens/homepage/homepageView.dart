@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Homepageview extends StatefulWidget {
   const Homepageview({super.key});
@@ -13,11 +13,79 @@ class Homepageview extends StatefulWidget {
 class _HomepageviewState extends State<Homepageview> {
   late Stream<StepCount> _stepCountStream;
   late Stream<PedestrianStatus> _pedestrianStatusStream;
-  String _status = 'Unknown', _steps = '0';
-  double _calories = 0; // Rough estimate: 0.04 calories per step
+  String _status = 'Unknown';
+  String _steps = '0';
+  double _calories = 0;
   int _minutesActive = 0;
   DateTime? _lastStepTime;
   Timer? _activityTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState();
+    _activityTimer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      if (_status == 'walking' || _status == 'running') {
+        setState(() {
+          _minutesActive++;
+        });
+      }
+    });
+  }
+
+  void onStepCount(StepCount event) {
+    setState(() {
+      _steps = event.steps.toString();
+      _calories =
+          event.steps * 0.04; // Rough estimate of calories burned per step
+
+      // Update last step time for activity tracking
+      _lastStepTime = DateTime.now();
+    });
+  }
+
+  void onPedestrianStatusChanged(PedestrianStatus event) {
+    setState(() {
+      _status = event.status;
+    });
+  }
+
+  void onPedestrianStatusError(error) {
+    setState(() {
+      _status = 'Pedestrian Status not available';
+    });
+  }
+
+  void onStepCountError(error) {
+    setState(() {
+      _steps = 'Step Count not available';
+    });
+  }
+
+  Future<void> initPlatformState() async {
+    // Request activity recognition permission
+    if (await Permission.activityRecognition.request().isGranted) {
+      _pedestrianStatusStream = Pedometer.pedestrianStatusStream;
+      _stepCountStream = Pedometer.stepCountStream;
+
+      _pedestrianStatusStream
+          .listen(onPedestrianStatusChanged)
+          .onError(onPedestrianStatusError);
+      _stepCountStream.listen(onStepCount).onError(onStepCountError);
+    } else {
+      setState(() {
+        _status = 'Permission denied';
+        _steps = 'Permission denied';
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _activityTimer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +124,6 @@ class _HomepageviewState extends State<Homepageview> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // User Welcome Section
               const Text(
                 'Welcome back, User!',
                 style: TextStyle(
@@ -67,7 +134,7 @@ class _HomepageviewState extends State<Homepageview> {
               ),
               const SizedBox(height: 24),
 
-              // Quick Stats Card
+              // Quick Stats Card with real-time data
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -81,15 +148,48 @@ class _HomepageviewState extends State<Homepageview> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildStatColumn('Workouts', '12', 'This Week'),
-                    _buildStatColumn('Calories', '1,250', 'Burned'),
-                    _buildStatColumn('Minutes', '180', 'Active'),
+                    _buildStatColumn('Steps', _steps, 'Today'),
+                    _buildStatColumn(
+                        'Calories', _calories.toStringAsFixed(1), 'Burned'),
+                    _buildStatColumn(
+                        'Minutes', _minutesActive.toString(), 'Active'),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Activity Status Card
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF2A2A2A),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      _status == 'walking'
+                          ? Icons.directions_walk
+                          : _status == 'running'
+                              ? Icons.directions_run
+                              : Icons.accessibility_new,
+                      color: Colors.blue,
+                      size: 24,
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                      'Current Activity: $_status',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
 
-              // Today's Workout Section
+              // Rest of your existing UI components...
               const Text(
                 'Today\'s Workout',
                 style: TextStyle(
@@ -137,7 +237,7 @@ class _HomepageviewState extends State<Homepageview> {
               ),
               const SizedBox(height: 24),
 
-              // Recent Workouts
+              // Recent Workouts section
               const Text(
                 'Recent Workouts',
                 style: TextStyle(
@@ -186,6 +286,7 @@ class _HomepageviewState extends State<Homepageview> {
     );
   }
 
+  // Your existing widget building methods remain the same...
   Widget _buildStatColumn(String title, String value, String subtitle) {
     return Column(
       children: [

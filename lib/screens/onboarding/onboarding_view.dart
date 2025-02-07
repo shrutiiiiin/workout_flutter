@@ -92,7 +92,7 @@ class _OnboardingViewState extends State<OnboardingView> {
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginscreenView()),
+        MaterialPageRoute(builder: (context) => const LoginscreenView()),
       );
     }
   }
@@ -100,7 +100,7 @@ class _OnboardingViewState extends State<OnboardingView> {
   void _skipOnboarding() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => LoginscreenView()),
+      MaterialPageRoute(builder: (context) => const LoginscreenView()),
     );
   }
 
@@ -167,10 +167,6 @@ class _OnboardingViewState extends State<OnboardingView> {
               right: 20,
               child: ElevatedButton(
                 onPressed: _nextPage,
-                child: const Text(
-                  'Let\'s get Started',
-                  style: TextStyle(fontSize: 16, color: Colors.black),
-                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.tealAccent,
                   padding:
@@ -178,6 +174,10 @@ class _OnboardingViewState extends State<OnboardingView> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
+                ),
+                child: const Text(
+                  'Let\'s get Started',
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
               ),
             ),

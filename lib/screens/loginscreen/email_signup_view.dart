@@ -38,8 +38,8 @@ class _EmailSignupViewState extends State<EmailSignupView> {
           password: _passwordController.text.trim(),
         );
         // Navigate to home page on success
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Homepageview()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const Homepageview()));
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -165,7 +165,8 @@ class _EmailSignupViewState extends State<EmailSignupView> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => LoginscreenView()));
+                                      builder: (context) =>
+                                          const LoginscreenView()));
                             },
                             child: const Text(
                               'Login',
