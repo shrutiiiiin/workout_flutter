@@ -46,3 +46,21 @@ app.*.map.json
 google-services.json
 firebase.json
 lib/firebase_options.dart
+
+# Platforms
+android/
+ios/
+web/
+linux/
+windows/
+macos/
+
+# IDE
+.idea/
+.vscode/
+
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+build/

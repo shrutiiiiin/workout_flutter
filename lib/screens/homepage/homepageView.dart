@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:workout_flutter_app/screens/profile/profile.dart';
 
 class Homepageview extends StatefulWidget {
   const Homepageview({super.key});
@@ -113,7 +114,10 @@ class _HomepageviewState extends State<Homepageview> {
               backgroundColor: Colors.blue,
               child: Icon(Icons.person, color: Colors.white, size: 20),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Profile()));
+            },
           ),
           const SizedBox(width: 8),
         ],
