@@ -1,8 +1,12 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:workout_flutter_app/model/stepTracking.dart';
 import 'package:workout_flutter_app/screens/profile/profile.dart';
+import 'package:workout_flutter_app/services/steptracking_firestore.dart';
 
 class Homepageview extends StatefulWidget {
   const Homepageview({super.key});
@@ -14,36 +18,85 @@ class Homepageview extends StatefulWidget {
 class _HomepageviewState extends State<Homepageview> {
   late Stream<StepCount> _stepCountStream;
   late Stream<PedestrianStatus> _pedestrianStatusStream;
-  String _status = 'Unknown';
-  String _steps = '0';
+  String _status = 'Idle';
   double _calories = 0;
   int _minutesActive = 0;
+  int _steps = 0;
+  int _lastSavedSteps = 0;
   DateTime? _lastStepTime;
   Timer? _activityTimer;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool _isInitialized = false;
+  final StepTrackingService _stepTrackingService = StepTrackingService();
   final String userId = FirebaseAuth.instance.currentUser!.uid;
+
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    _initializeApp();
+  }
+
+  Future<void> _initializeApp() async {
+    await _loadTodaySteps();
+    await initPlatformState();
+    _startActivityTimer();
+  }
+
+  void _startActivityTimer() {
     _activityTimer = Timer.periodic(const Duration(minutes: 1), (timer) {
       if (_status == 'walking' || _status == 'running') {
         setState(() {
           _minutesActive++;
+          _updateSteps();
         });
       }
     });
   }
 
-  void onStepCount(StepCount event) {
-    setState(() {
-      _steps = event.steps.toString();
-      _calories =
-          event.steps * 0.04; // Rough estimate of calories burned per step
+  Future<void> _loadTodaySteps() async {
+    try {
+      final stepTracking = await _stepTrackingService.getTodaySteps(userId);
+      if (stepTracking != null) {
+        setState(() {
+          _steps = stepTracking.steps;
+          _calories = stepTracking.calories;
+          _minutesActive = stepTracking.minutesActive;
+        });
+      }
+    } catch (e) {
+      print('Error loading today\'s steps: $e');
+    }
+  }
 
-      // Update last step time for activity tracking
-      _lastStepTime = DateTime.now();
-    });
+  void onStepCount(StepCount event) {
+    if (!_isInitialized) {
+      _lastSavedSteps = event.steps;
+      _isInitialized = true;
+      return;
+    }
+
+    final stepsDifference = event.steps - _lastSavedSteps;
+
+    if (stepsDifference > 0) {
+      setState(() {
+        _steps += stepsDifference;
+        _calories = _steps * 0.04;
+        _lastSavedSteps = event.steps;
+        _lastStepTime = DateTime.now();
+        _updateSteps();
+      });
+    }
+  }
+
+  Future<void> _updateSteps() async {
+    final stepTracking = StepTracking(
+      userId: userId,
+      steps: _steps,
+      calories: _calories,
+      minutesActive: _minutesActive,
+      date: DateTime.now(),
+    );
+
+    await _stepTrackingService.updateSteps(stepTracking);
   }
 
   void onPedestrianStatusChanged(PedestrianStatus event) {
@@ -53,32 +106,37 @@ class _HomepageviewState extends State<Homepageview> {
   }
 
   void onPedestrianStatusError(error) {
+    print('Pedestrian status error: $error');
     setState(() {
       _status = 'Pedestrian Status not available';
     });
   }
 
   void onStepCountError(error) {
+    print('Step count error: $error');
     setState(() {
-      _steps = 'Step Count not available';
+      _steps = 0;
     });
   }
 
   Future<void> initPlatformState() async {
-    // Request activity recognition permission
-    if (await Permission.activityRecognition.request().isGranted) {
-      _pedestrianStatusStream = Pedometer.pedestrianStatusStream;
-      _stepCountStream = Pedometer.stepCountStream;
+    try {
+      if (await Permission.activityRecognition.request().isGranted) {
+        _pedestrianStatusStream = Pedometer.pedestrianStatusStream;
+        _stepCountStream = Pedometer.stepCountStream;
 
-      _pedestrianStatusStream
-          .listen(onPedestrianStatusChanged)
-          .onError(onPedestrianStatusError);
-      _stepCountStream.listen(onStepCount).onError(onStepCountError);
-    } else {
-      setState(() {
-        _status = 'Permission denied';
-        _steps = 'Permission denied';
-      });
+        _pedestrianStatusStream
+            .listen(onPedestrianStatusChanged)
+            .onError(onPedestrianStatusError);
+        _stepCountStream.listen(onStepCount).onError(onStepCountError);
+      } else {
+        setState(() {
+          _status = 'Permission denied';
+          _steps = 0;
+        });
+      }
+    } catch (e) {
+      print('Error initializing platform state: $e');
     }
   }
 
@@ -153,7 +211,7 @@ class _HomepageviewState extends State<Homepageview> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildStatColumn('Steps', _steps, 'Today'),
+                    _buildStatColumn('Steps', _steps.toString(), 'Today'),
                     _buildStatColumn(
                         'Calories', _calories.toStringAsFixed(1), 'Burned'),
                     _buildStatColumn(
