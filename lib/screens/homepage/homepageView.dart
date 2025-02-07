@@ -20,7 +20,8 @@ class _HomepageviewState extends State<Homepageview> {
   int _minutesActive = 0;
   DateTime? _lastStepTime;
   Timer? _activityTimer;
-
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final String userId = FirebaseAuth.instance.currentUser!.uid;
   @override
   void initState() {
     super.initState();
