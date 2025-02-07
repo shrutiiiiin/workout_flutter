@@ -48,7 +48,7 @@ firebase.json
 lib/firebase_options.dart
 
 # Platforms
-android/
+
 ios/
 web/
 linux/
