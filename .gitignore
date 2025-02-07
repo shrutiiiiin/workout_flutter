@@ -59,8 +59,3 @@ macos/
 .idea/
 .vscode/
 
-# Flutter/Dart
-.dart_tool/
-.flutter-plugins
-.flutter-plugins-dependencies
-build/
